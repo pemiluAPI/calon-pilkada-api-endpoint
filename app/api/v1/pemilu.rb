@@ -8,7 +8,7 @@ module PaslonHelpers
       dob: participant.dob,
       alamat: participant.address,
       pekerjaan: participant.work,
-      status: participant.status  
+      status: participant.status
     }
   end
 end
@@ -126,19 +126,34 @@ module Pemilu
 
     resource :regions do
       desc "Return all regions"
-      get do 
+      get do
         regions = Array.new
 
-        Region.includes(:province).each do |region|
-          regions << {
-            id: region.id,
-            provinsi: {
-              id: region.province_id,
-              nama: region.province.name
-            },
-            kind: region.kind,
-            nama: region.name
-          }
+        # Prepare conditions based on params
+        valid_params = {
+          provinsi: 'province_id',
+        }
+        conditions = Hash.new
+        valid_params.each_pair do |key, value|
+          conditions[value.to_sym] = params[key.to_sym] unless params[key.to_sym].blank?
+        end
+
+        limit = (params[:limit].to_i == 0 || params[:limit].empty?) ? 10 : params[:limit]
+
+        Region.includes(:province)
+          .where(conditions)
+          .limit(limit)
+          .offset(params[:offset])
+          .each do |region|
+            regions << {
+              id: region.id,
+              provinsi: {
+                id: region.province_id,
+                nama: region.province.blank? ? "BLANK" : region.province.name
+              },
+              kind: region.kind,
+              nama: region.name
+            }
         end
 
         {
