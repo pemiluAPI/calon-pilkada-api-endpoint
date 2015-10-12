@@ -85,8 +85,6 @@ module Pemilu
               dinasti: candidate.dynasty,
               perempuan: candidate.amount_women,
               incumbent: candidate.incumbent,
-              visi: candidate.vision_mision.blank? ? "" : candidate.vision_mision.vision,
-              misi: candidate.vision_mision.blank? ? "" : candidate.vision_mision.mision,
               sumber: candidate.resource
             }
         end
@@ -101,6 +99,52 @@ module Pemilu
       end
     end
 
+    resource :vision_missions do
+      helpers PaslonHelpers
+
+      desc "Return all vision_missions"
+      get do
+        vision_missions = Array.new
+
+        # Prepare conditions based on params
+        valid_params = {
+          peserta: 'candidates.id_participant'
+        }
+        conditions = Hash.new
+        valid_params.each_pair do |key, value|
+          conditions[value.to_sym] = params[key.to_sym] unless params[key.to_sym].blank?
+        end
+
+        limit = (params[:limit].to_i == 0 || params[:limit].empty?) ? 10 : params[:limit]
+
+        VisionMission.joins(:candidate => :participants)
+          .where(conditions)
+          .limit(limit)
+          .offset(params[:offset])
+          .uniq
+          .each do |vision_mission|
+          vision_missions << {
+            id: vision_mission.id,
+            candidate_id: vision_mission.candidate.id_participant,
+            paslon: [
+              build_paslon(vision_mission.candidate.participants.where(kind: "CALON").first),
+              build_paslon(vision_mission.candidate.participants.where(kind: "WAKIL").first)
+            ],
+            visi: vision_mission.vision,
+            misi: vision_mission.mission,
+            sumber: vision_mission.resource
+          }
+        end
+
+        {
+          results: {
+            count: vision_missions.count,
+            total: VisionMission.joins(:candidate => :participants).where(conditions).uniq.count,
+            vision_missions: vision_missions
+          }
+        }
+      end
+    end
 
     resource :provinces do
       desc "Return all provinces"
