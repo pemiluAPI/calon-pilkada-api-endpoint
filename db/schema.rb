@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150929232411) do
+ActiveRecord::Schema.define(version: 20151011235045) do
 
   create_table "candidates", force: true do |t|
     t.integer  "province_id"
@@ -75,10 +75,10 @@ ActiveRecord::Schema.define(version: 20150929232411) do
 
   add_index "regions", ["province_id"], name: "index_regions_on_province_id", using: :btree
 
-  create_table "vision_misions", force: true do |t|
+  create_table "vision_missions", force: true do |t|
     t.integer  "candidate_id"
     t.text     "vision"
-    t.text     "mision"
+    t.text     "mission"
     t.text     "resource"
     t.datetime "created_at"
     t.datetime "updated_at"
