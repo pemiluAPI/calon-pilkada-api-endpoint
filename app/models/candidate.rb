@@ -3,5 +3,5 @@ class Candidate < ActiveRecord::Base
 	belongs_to :region
 
 	has_many :participants
-	has_one	:vision_mision
+	has_one	:vision_mission
 end
