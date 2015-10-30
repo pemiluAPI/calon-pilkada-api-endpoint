@@ -61,7 +61,7 @@ module Pemilu
               id: candidate.id,
               provinsi: {
                 id: candidate.province_id,
-                nama: candidate.province.name
+                nama: candidate.province.blank? ? "" : candidate.province.name
               },
               daerah: build_region(candidate.region),
               id_peserta: candidate.id_participant,
