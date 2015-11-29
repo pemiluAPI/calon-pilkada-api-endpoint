@@ -1,15 +1,19 @@
 module PaslonHelpers
   def build_paslon(participant)
-    {
-      kind: participant.kind,
-      nama: participant.name,
-      jk: participant.gender,
-      pob: participant.pob,
-      dob: participant.dob,
-      alamat: participant.address,
-      pekerjaan: participant.work,
-      status: participant.status
-    }
+    unless participant.blank?
+      {
+        kind: participant.kind,
+        nama: participant.name,
+        jk: participant.gender,
+        pob: participant.pob,
+        dob: participant.dob,
+        alamat: participant.address,
+        pekerjaan: participant.work,
+        status: participant.status
+      }
+    else
+      {}
+    end
   end
 end
 
