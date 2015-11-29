@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151011235045) do
+ActiveRecord::Schema.define(version: 20151129200459) do
 
   create_table "candidates", force: true do |t|
     t.integer  "province_id"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 20151011235045) do
     t.string   "resource"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "information"
   end
 
   add_index "candidates", ["endorsement_type"], name: "index_candidates_on_endorsement_type", using: :btree
@@ -55,9 +56,17 @@ ActiveRecord::Schema.define(version: 20151011235045) do
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "id_participant"
   end
 
   add_index "participants", ["candidate_id"], name: "index_participants_on_candidate_id", using: :btree
+
+  create_table "pictures", force: true do |t|
+    t.string   "id_participant"
+    t.string   "url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "provinces", force: true do |t|
     t.string   "name"
@@ -82,6 +91,7 @@ ActiveRecord::Schema.define(version: 20151011235045) do
     t.text     "resource"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "id_participant"
   end
 
 end
