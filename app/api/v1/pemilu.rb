@@ -150,6 +150,43 @@ module Pemilu
       end
     end
 
+    resource :pictures do
+      desc "Return all Picture of Paslon"
+      get do
+        pictures = Array.new
+
+        # Prepare conditions based on params
+        valid_params = {
+          peserta: 'id_participant',
+        }
+        conditions = Hash.new
+        valid_params.each_pair do |key, value|
+          conditions[value.to_sym] = params[key.to_sym] unless params[key.to_sym].blank?
+        end
+
+        limit = (params[:limit].to_i == 0 || params[:limit].empty?) ? 10 : params[:limit]
+
+        Picture.where(conditions)
+          .limit(limit)
+          .offset(params[:offset])
+          .each do |picture|
+            pictures << {
+              id: picture.id,
+              id_peserta: picture.id_participant,
+              url: picture.url
+            }
+        end
+
+        {
+          results: {
+            count: pictures.count,
+            total: Picture.where(conditions).count,
+            pictures: pictures
+          }
+        }
+      end
+    end
+
     resource :provinces do
       desc "Return all provinces"
       get do
