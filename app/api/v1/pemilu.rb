@@ -69,6 +69,7 @@ module Pemilu
               },
               daerah: build_region(candidate.region),
               id_peserta: candidate.id_participant,
+              no_urut: candidate.information,
               paslon: [
                 build_paslon(candidate.participants.where(kind: "CALON").first),
                 build_paslon(candidate.participants.where(kind: "WAKIL").first)
